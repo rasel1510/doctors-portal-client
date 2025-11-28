@@ -7,11 +7,7 @@ const Service = ({service, setTreatment}) => {
            
             <div className="card-body items-center text-center">
                 <h2 className="text-secondary text-xl font-semibold">{name}</h2>
-                <p>
-                  {
-                    slots.length>0 ? `${slots[0]}`: 'No slot available'
-                  }
-                </p>
+                
                 <p>{slots.length} {slots.length>1 ?'spaces':'space '} Available</p>
                 <p><small>Price: {price}</small></p>
             

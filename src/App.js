@@ -48,12 +48,12 @@ function App() {
         }
         >
           <Route index element={<MyAppointment></MyAppointment>}></Route>
-          <Route path='review' element={<MyReview/>}></Route>
-          <Route path='history' element={<History/>}></Route>
+          <Route path='review' element={<MyReview />}></Route>
+          <Route path='history' element={<History />}></Route>
 
-          <Route path='users' element={<RequireAdmin><AllUsers/></RequireAdmin>}></Route>
-          <Route path='addDoctor' element={<RequireAdmin><AddDoctor/></RequireAdmin>}></Route>
-          <Route path='manageDoctor' element={<RequireAdmin><ManageDoctor/></RequireAdmin>}></Route>
+          <Route path='users' element={<RequireAdmin><AllUsers /></RequireAdmin>}></Route>
+          <Route path='addDoctor' element={<RequireAdmin><AddDoctor /></RequireAdmin>}></Route>
+          <Route path='manageDoctor' element={<RequireAdmin><ManageDoctor /></RequireAdmin>}></Route>
         </Route>
         <Route path='singup' element={<SignUp />} />
         <Route path='forgotpassword' element={<ForgotPassword />} />

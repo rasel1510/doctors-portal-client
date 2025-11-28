@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import auth from '../../firebase.init';
 import { signOut } from 'firebase/auth';
-import {  useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 
@@ -11,38 +11,38 @@ const MyAppointment = () => {
 
     const [appointments, setAppointments] = useState([]);
     const [user] = useAuthState(auth)
-    const navigate=useNavigate()
+    const navigate = useNavigate()
 
     useEffect(() => {
         if (user) {
-            fetch(`http://localhost:5000/booking?patient=${user.email}`,{
-                method:'GET',
-                headers:{
-                    'authorization':`Brearer ${localStorage.getItem('accessToken')}`
+            fetch(`http://localhost:5000/booking?patient=${user.email}`, {
+                method: 'GET',
+                headers: {
+                    'authorization': `Brearer ${localStorage.getItem('accessToken')}`
                 }
             })
-                .then(res =>{
-                    if(res.status===401 || res.status===403){
-                       signOut(auth);
-                       localStorage.removeItem('accessToken'); 
-                      navigate('/')
+                .then(res => {
+                    if (res.status === 401 || res.status === 403) {
+                        signOut(auth);
+                        localStorage.removeItem('accessToken');
+                        navigate('/')
                     }
-                   return res.json()
+                    return res.json()
                 })
                 .then(data => setAppointments(data));
         }
-    }, [user,navigate])
+    }, [user, navigate])
 
 
 
- 
+
 
 
 
     return (
         <div>
             <h1>MY Appointment {
-            appointments.length
+                appointments.length
             }</h1>
 
             <div className="overflow-x-auto">
@@ -59,25 +59,25 @@ const MyAppointment = () => {
                         </tr>
                     </thead>
                     <tbody>
-        
+
                         {
-                            appointments.map((a,index)=>
-                            <tr>
-                                <th>{index+1}</th>
-                                <td>{a.patientName}</td>
-                                <td>{a.date}</td>
-                                <td>{a.slot}</td>
-                                <td>{a.treatment}</td>
-                               
-                            </tr>
+                            appointments.map((a, index) =>
+                                <tr>
+                                    <th>{index + 1}</th>
+                                    <td>{a.patientName}</td>
+                                    <td>{a.date}</td>
+                                    <td>{a.slot}</td>
+                                    <td>{a.treatment}</td>
+                                    <td>{(a.price && !a.paid) && <Link to={``}><button className='btn btn-secondary btn-xs'>Pay</button></Link>}</td>
+                                    <td>{(a.price && a.paid) && <span className='text-green-400'>Paied</span>}</td>
+                                </tr>
                             )
                         }
-                        
-                       
+
+
                     </tbody>
                 </table>
             </div>
-
         </div>
     );
 };
