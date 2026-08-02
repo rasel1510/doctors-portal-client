@@ -70,7 +70,7 @@ const AddDoctor = () => {
 
 
             <div className='flex h-screen justify-center items-center'>
-                <div className="card flex   w-96 bg-base-100  shadow-xl text-primary-content">
+                <div className="card flex   w-96 bg-white  shadow-xl text-black">
                     <div className="card-body">
                         <h2 className="text-2xl font-bold text-center">Add A Doctor</h2>
                         <form onSubmit={handleSubmit(onSubmit)}>
@@ -78,7 +78,7 @@ const AddDoctor = () => {
                             {/* THis for name INput field*/}
                             <label className="form-control w-full max-w-xs">
                                 <div className="label">
-                                    <span className="label-text">Name</span>
+                                    <span className="label-text text-black">Name</span>
                                 </div>
                                 <input
                                     type="name"
@@ -132,7 +132,7 @@ const AddDoctor = () => {
                                     <span className="label-text">Specialization</span>
                                 </div>
 
-                                <select {...register("speciality")} className="select select-bordered w-full max-w-xs">
+                                <select {...register("speciality")} className="select bg-white select-bordered w-full max-w-xs">
                                     {
                                         services.map(servce => <option
                                             key={servce._id}

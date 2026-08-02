@@ -25,7 +25,7 @@ const AvailableAppointments = ({ date }) => {
   }
 
   return (
-    <div className='mb-4'>
+    <div className='mb-4 bg-white'>
       <h1 className='text-2xl text-center text-secondary my-8'>
         Available Appointments On {displayDate}
       </h1>

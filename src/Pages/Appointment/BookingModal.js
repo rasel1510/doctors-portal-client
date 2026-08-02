@@ -68,19 +68,19 @@ const BookingModal = ({ treatment, date, setTreatment, refetch }) => {
         <div>
             <input type="checkbox" id='booking-modal' className='modal-toggle' />
             <div className='modal modal-bottom sm:modal-middle'>
-                <div className='modal-box'>
+                <div className='modal-box bg-white'>
                     <label htmlFor="booking-modal" className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</label>
                     <h3 className='font-bold text-xl text-secondary text-center'>Booking for : {name}</h3>
                     <h3 className='font-bold text-xl text-orange-400 text-center'>Price : ${price}</h3>
-                    <form onSubmit={handleBooking} className='grid text-black grid-cols-1 gap-2 mt-3 justify-items-center'>
-                        <input type="text" disabled value={displayDate} className="input input-bordered w-full max-w-xs" />
+                    <form onSubmit={handleBooking} className='grid bg-white text-black grid-cols-1 gap-2 mt-3 justify-items-center'>
+                        <input type="text" disabled value={displayDate} className="input bg-white input-bordered w-full max-w-xs" />
                         {/* hidden ISO date for server */}
                         <input type="hidden" name="dateISO" value={dateISO} />
-                        <select name='slot' className="select select-bordered w-full max-w-xs">
+                        <select name='slot' className="select bg-white select-bordered w-full max-w-xs">
                             {slots.map((slot, index) => <option key={index} value={slot}>{slot}</option>)}
                         </select>
 
-                        <input type="text" name='name' disabled value={user?.displayName || ''} className="input input-bordered w-full max-w-xs" />
+                        <input type="text" name='name' disabled value={user?.displayName || ''} className="input bg-white input-bordered w-full max-w-xs" />
                         <input type="text" name='email' disabled value={user?.email || ''} className="input input-bordered w-full max-w-xs" />
                         <input type="text" name='phone' placeholder="Enter Phone Number" className="input input-bordered w-full max-w-xs" />
 

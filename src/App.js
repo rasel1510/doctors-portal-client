@@ -29,7 +29,7 @@ import { ToastContainer } from 'react-toastify';
 
 function App() {
   return (
-    <div className='px-12'>
+    <div className='px-12 bg-white'>
       <Navbar />
       <Routes>
         <Route path='/' element={<Home />} />

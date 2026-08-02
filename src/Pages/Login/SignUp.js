@@ -66,7 +66,7 @@ const SignUp = () => {
 
     return (
         <div className='flex h-screen justify-center items-center'>
-            <div className="card w-96 bg-base-100  shadow-xl text-primary-content">
+            <div className="card w-96 bg-white  shadow-xl text-primary-content">
                 <div className="card-body">
                     <h2 className="text-2xl font-bold text-center">Sign Up</h2>
 
@@ -81,7 +81,7 @@ const SignUp = () => {
                             <input
                                 type="name"
                                 placeholder="Enter Your Name"
-                                className="input input-bordered w-full max-w-xs"
+                                className="input bg-white input-bordered w-full max-w-xs"
                                 {...register("name", {
                                     required: {
                                         value: true,
@@ -103,7 +103,7 @@ const SignUp = () => {
                             <input
                                 type="email"
                                 placeholder="Enter Your Email"
-                                className="input input-bordered w-full max-w-xs"
+                                className="input bg-white  input-bordered w-full max-w-xs"
                                 {...register("email", {
                                     required: {
                                         value: true,
@@ -132,7 +132,7 @@ const SignUp = () => {
                             <input
                                 type="password"
                                 placeholder="Enter Your Password"
-                                className="input input-bordered w-full max-w-xs"
+                                className="input bg-white  input-bordered w-full max-w-xs"
                                 {...register("password", {
                                     required: {
                                         value: true,
