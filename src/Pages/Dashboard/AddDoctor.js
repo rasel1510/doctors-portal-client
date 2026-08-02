@@ -8,7 +8,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { UserPlus, Stethoscope, Mail, Image as ImageIcon, UploadCloud } from 'lucide-react';
+import { UserPlus, UploadCloud } from 'lucide-react';
 
 const AddDoctor = () => {
   const { register, formState: { errors }, handleSubmit, reset } = useForm();

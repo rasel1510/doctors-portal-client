@@ -1,7 +1,7 @@
 import React from 'react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { History as HistoryIcon, Calendar, Stethoscope, CheckCircle2 } from 'lucide-react';
+import { Calendar, Stethoscope, CheckCircle2 } from 'lucide-react';
 
 const History = () => {
   return (

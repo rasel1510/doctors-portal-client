@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { signOut } from 'firebase/auth';
 import auth from '../../firebase.init';
-import { Stethoscope, LogOut, LogIn, Menu, X, LayoutDashboard, Calendar, Info, PhoneCall, Home } from 'lucide-react';
+import { Stethoscope, LogOut, LogIn, Menu, X, LayoutDashboard, Calendar, Info, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 

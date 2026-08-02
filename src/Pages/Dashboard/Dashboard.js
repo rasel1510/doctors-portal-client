@@ -3,7 +3,7 @@ import { Link, Outlet, useLocation } from 'react-router-dom';
 import useAdmin from '../../hooks/useAdmin';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import auth from '../../firebase.init';
-import { Calendar, Star, History as HistoryIcon, Users, UserPlus, Stethoscope, LayoutDashboard, ShieldAlert } from 'lucide-react';
+import { Calendar, Star, History as HistoryIcon, Users, UserPlus, Stethoscope, ShieldAlert } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 
