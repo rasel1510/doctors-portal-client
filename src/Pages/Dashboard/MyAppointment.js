@@ -15,7 +15,7 @@ const MyAppointment = () => {
 
     useEffect(() => {
         if (user) {
-            fetch(`http://localhost:5000/booking?patient=${user.email}`, {
+            fetch(`https://doctors-portal-server-psi.vercel.app/booking?patient=${user.email}`, {
                 method: 'GET',
                 headers: {
                     'authorization': `Brearer ${localStorage.getItem('accessToken')}`

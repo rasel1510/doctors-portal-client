@@ -7,7 +7,7 @@ import UserRow from './UserRow';
 
 const AllUsers = () => {
     //using react query to fetch data from localhost:5000/user
-    const { data: users, isLoading, refetch } = useQuery('users', () => fetch('http://localhost:5000/user',{
+    const { data: users, isLoading, refetch } = useQuery('users', () => fetch('https://doctors-portal-server-psi.vercel.app/user',{
         method:'GET',
         headers:{
             authorization:`Bearer ${localStorage.getItem('accessToken')}`

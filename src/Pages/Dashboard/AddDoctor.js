@@ -9,7 +9,7 @@ import doctors_consult from '../../assets/images/doctors_consult.jpg'
 const AddDoctor = () => {
     const { register, formState: { errors }, handleSubmit, reset } = useForm() // hook form 
 
-    const { data: services, isLoading } = useQuery('services', () => fetch('http://localhost:5000/service').then(res => res.json()));
+    const { data: services, isLoading } = useQuery('services', () => fetch('https://doctors-portal-server-psi.vercel.app/service').then(res => res.json()));
 
     const imageStorageKey = '6d4c293ef648418de727023b7d745a1b';
 
@@ -37,7 +37,7 @@ const AddDoctor = () => {
                 }
                 // console.log('imagebb result', result)
                 //now send doctor in Backend  that (backend )will store it in database: 
-                fetch('http://localhost:5000/doctor', {
+                fetch('https://doctors-portal-server-psi.vercel.app/doctor', {
                     method: 'POST',
                     headers: {
                         'content-type': 'application/json',

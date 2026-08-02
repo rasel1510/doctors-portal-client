@@ -5,7 +5,7 @@ const DeleteConfirm = ({ deletingDoctor, setDeletingDoctor, refetch }) => {
     const { name, email } = deletingDoctor;
 
     const handleDelete = email => {
-        fetch(`http://localhost:5000/delete/${email}`, {
+        fetch(`https://doctors-portal-server-psi.vercel.app/delete/${email}`, {
             method: 'DELETE',
             headers: {
                 authorization: `Bearer ${localStorage.getItem('accessToken')}`

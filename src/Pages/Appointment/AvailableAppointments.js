@@ -15,7 +15,7 @@ const AvailableAppointments = ({ date }) => {
   const { data: services, isLoading, refetch } = useQuery(
     ['available', requestDateISO],
     () =>
-      fetch(`http://localhost:5000/available?date=${requestDateISO}`).then((res) =>
+      fetch(`https://doctors-portal-server-psi.vercel.app/available?date=${requestDateISO}`).then((res) =>
         res.json()
       )
   );
