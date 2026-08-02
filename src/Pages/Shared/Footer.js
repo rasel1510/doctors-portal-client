@@ -1,33 +1,95 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Stethoscope, Heart, Mail, Phone, MapPin } from 'lucide-react';
 
 const Footer = () => {
-    return (
-        <footer className="footer p-10 bg-accent text-white">
-            <nav>
-                <header className="footer-title">Services</header>
-                <Link className="link link-hover">Branding</Link>
-                <Link className="link link-hover">Design</Link>
-                <Link className="link link-hover">Marketing</Link>
-                <Link className="link link-hover">Advertisement</Link>
-            </nav>
-            <nav>
-                <header className="footer-title">Company</header>
-                <Link className="link link-hover">About us</Link>
-                <Link className="link link-hover">Contact</Link>
-                <Link className="link link-hover">Jobs</Link>
-                <Link className="link link-hover">Press kit</Link>
-            </nav>
-            <nav>
-                <header className="footer-title">Social</header>
-                <div className="grid grid-flow-col gap-4">
-                    <Link><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" className="fill-current"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path></svg></Link>
-                    <Link><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" className="fill-current"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"></path></svg></Link>
-                    <Link><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" className="fill-current"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"></path></svg></Link>
-                </div>
-            </nav>
-        </footer>
-    );
+  return (
+    <footer className="bg-slate-900 text-slate-300 border-t border-slate-800 pt-16 pb-12 mt-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-slate-800">
+          
+          {/* Brand Info */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-sky-500 text-white">
+                <Stethoscope className="h-5 w-5" />
+              </div>
+              <span className="text-xl font-bold text-white">
+                Doctors<span className="text-sky-400">Portal</span>
+              </span>
+            </div>
+            <p className="text-sm text-slate-400 leading-relaxed">
+              Providing world-class healthcare scheduling and medical management with compassion, innovation, and trust.
+            </p>
+            <div className="flex items-center gap-2 text-xs text-slate-400">
+              <MapPin className="h-4 w-4 text-sky-400" />
+              <span>123 Medical Center Way, Suite 400</span>
+            </div>
+          </div>
+
+          {/* Quick Links */}
+          <div>
+            <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">Quick Links</h4>
+            <ul className="space-y-2.5 text-sm">
+              <li>
+                <Link to="/" className="hover:text-sky-400 transition-colors">Home</Link>
+              </li>
+              <li>
+                <Link to="/about" className="hover:text-sky-400 transition-colors">About Us</Link>
+              </li>
+              <li>
+                <Link to="/appointment" className="hover:text-sky-400 transition-colors">Book Appointment</Link>
+              </li>
+              <li>
+                <Link to="/login" className="hover:text-sky-400 transition-colors">Patient Login</Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Medical Services */}
+          <div>
+            <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">Our Services</h4>
+            <ul className="space-y-2.5 text-sm text-slate-400">
+              <li>Fluoride Treatment</li>
+              <li>Cavity Filling & Protection</li>
+              <li>Teeth Whitening & Hygiene</li>
+              <li>General Health Consultation</li>
+              <li>Pediatric Care</li>
+            </ul>
+          </div>
+
+          {/* Contact & Support */}
+          <div>
+            <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">Contact Support</h4>
+            <ul className="space-y-3 text-sm text-slate-400">
+              <li className="flex items-center gap-2">
+                <Phone className="h-4 w-4 text-sky-400" />
+                <span>+1 (800) 555-DOCTOR</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <Mail className="h-4 w-4 text-sky-400" />
+                <span>support@doctorsportal.com</span>
+              </li>
+              <li className="pt-2">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800 text-sky-400 text-xs font-medium">
+                  Available 24/7 Emergency
+                </span>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+          <p>© {new Date().getFullYear()} DoctorsPortal Inc. All rights reserved.</p>
+          <p className="flex items-center gap-1">
+            Made with <Heart className="h-3.5 w-3.5 text-red-500 fill-red-500" /> for better health.
+          </p>
+        </div>
+      </div>
+    </footer>
+  );
 };
 
 export default Footer;
