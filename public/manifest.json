@@ -1,7 +1,15 @@
 {
+  "id": "/",
   "short_name": "Doctors Portal",
   "name": "Doctors Portal - Medical & Dental Services",
   "description": "Book appointments with certified doctors and manage your medical schedules.",
+  "scope": "/",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#0FCFEC",
+  "background_color": "#ffffff",
+  "categories": ["medical", "health", "lifestyle"],
   "icons": [
     {
       "src": "favicon.ico",
@@ -12,18 +20,25 @@
       "src": "logo192.png",
       "type": "image/png",
       "sizes": "192x192",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "maskable"
     },
     {
       "src": "logo512.png",
       "type": "image/png",
       "sizes": "512x512",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
     }
-  ],
-  "start_url": "/",
-  "display": "standalone",
-  "orientation": "portrait",
-  "theme_color": "#0FCFEC",
-  "background_color": "#ffffff"
+  ]
 }

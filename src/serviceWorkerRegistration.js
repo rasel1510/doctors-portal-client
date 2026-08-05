@@ -1,5 +1,4 @@
-// This optional code is used to register a service worker.
-// register() is not called by default.
+// This helper registers the service worker for PWA support
 
 const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||
@@ -11,24 +10,28 @@ export function register(config) {
   if ('serviceWorker' in navigator) {
     const publicUrl = new URL(process.env.PUBLIC_URL || '', window.location.href);
     if (publicUrl.origin !== window.location.origin) {
-      // Service worker won't work if PUBLIC_URL is on a different origin
       return;
     }
 
-    window.addEventListener('load', () => {
-      const swUrl = `${process.env.PUBLIC_URL}/sw.js`;
+    const swUrl = `${process.env.PUBLIC_URL}/sw.js`;
 
+    const registerSW = () => {
       if (isLocalhost) {
-        // Checking on localhost
         checkValidServiceWorker(swUrl, config);
         navigator.serviceWorker.ready.then(() => {
           console.log('[PWA] Service worker ready in localhost mode.');
         });
       } else {
-        // Register service worker in production / Vercel
         registerValidSW(swUrl, config);
       }
-    });
+    };
+
+    // Ensure registration runs immediately if page is already loaded
+    if (document.readyState === 'complete') {
+      registerSW();
+    } else {
+      window.addEventListener('load', registerSW);
+    }
   }
 }
 
@@ -36,6 +39,7 @@ function registerValidSW(swUrl, config) {
   navigator.serviceWorker
     .register(swUrl)
     .then((registration) => {
+      console.log('[PWA] Service Worker registered with scope:', registration.scope);
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
         if (installingWorker == null) {
@@ -44,7 +48,7 @@ function registerValidSW(swUrl, config) {
         installingWorker.onstatechange = () => {
           if (installingWorker.state === 'installed') {
             if (navigator.serviceWorker.controller) {
-              console.log('[PWA] New content is available and will be used when all tabs are closed.');
+              console.log('[PWA] New content is available; please refresh.');
               if (config && config.onUpdate) {
                 config.onUpdate(registration);
               }
@@ -81,7 +85,7 @@ function checkValidServiceWorker(swUrl, config) {
       }
     })
     .catch(() => {
-      console.log('[PWA] No internet connection found. App is running in offline mode.');
+      console.log('[PWA] No internet connection found. App running in offline mode.');
     });
 }
 
