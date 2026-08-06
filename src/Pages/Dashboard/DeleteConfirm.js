@@ -3,12 +3,13 @@ import { toast } from 'react-toastify';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle } from 'lucide-react';
+import { BASE_URL } from '../../config';
 
 const DeleteConfirm = ({ deletingDoctor, setDeletingDoctor, refetch }) => {
   const { name, email } = deletingDoctor;
 
   const handleDelete = (email) => {
-    fetch(`https://doctors-portal-server-psi.vercel.app/delete/${email}`, {
+    fetch(`${BASE_URL}/delete/${email}`, {
       method: 'DELETE',
       headers: {
         authorization: `Bearer ${localStorage.getItem('accessToken')}`,

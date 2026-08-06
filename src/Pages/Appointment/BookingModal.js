@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Calendar, Clock, DollarSign, User, Mail, Phone } from 'lucide-react';
+import { BASE_URL } from '../../config';
 
 const BookingModal = ({ treatment, date, setTreatment, refetch }) => {
   const { _id, name, slots, price } = treatment;
@@ -42,7 +43,7 @@ const BookingModal = ({ treatment, date, setTreatment, refetch }) => {
       phone,
     };
 
-    fetch('https://doctors-portal-server-psi.vercel.app/booking', {
+    fetch(`${BASE_URL}/booking`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

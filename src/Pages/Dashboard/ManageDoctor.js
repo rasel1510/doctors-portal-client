@@ -6,12 +6,13 @@ import DeleteConfirm from './DeleteConfirm';
 import { Table, TableHeader, TableHead, TableBody, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Stethoscope } from 'lucide-react';
+import { BASE_URL } from '../../config';
 
 const ManageDoctor = () => {
   const [deletingDoctor, setDeletingDoctor] = useState(null);
 
   const { data: doctors, isLoading, refetch } = useQuery('doctors', () =>
-    fetch('https://doctors-portal-server-psi.vercel.app/doctor', {
+    fetch(`${BASE_URL}/doctor`, {
       headers: {
         authorization: `Bearer ${localStorage.getItem('accessToken')}`,
       },
@@ -82,3 +83,5 @@ const ManageDoctor = () => {
 };
 
 export default ManageDoctor;
+
+

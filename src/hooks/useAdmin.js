@@ -1,33 +1,36 @@
 import { useEffect, useState } from "react";
+import { BASE_URL } from "../config";
 
+const useAdmin = (user) => {
+    const [admin, setAdmin] = useState(false);
+    const [adminLoading, setAdminLoading] = useState(true);
 
+    useEffect(() => {
+        const email = user?.email;
 
-const useAdmin=user=>{
-    const [admin,setAdmin]=useState(false)
-    const[adminLoading,setAdminLoading]=useState(true);
-
-    useEffect(()=>{
-        const email=user?.email;
-
-        if(email){
-            fetch(`https://doctors-portal-server-psi.vercel.app/admin/${email}`,{
-                method:'GET',
-                headers:{
-                    'content-type':'application/json',
-                    authorization:`Bearer ${localStorage.getItem('accessToken')}`
-
+        if (email) {
+            fetch(`${BASE_URL}/admin/${email}`, {
+                method: 'GET',
+                headers: {
+                    'content-type': 'application/json',
+                    authorization: `Bearer ${localStorage.getItem('accessToken')}`
                 }
             })
-            .then(res=>res.json())
-            .then(data=>{
+            .then(res => res.json())
+            .then(data => {
                 setAdmin(data.admin);
-                setAdminLoading(false) // for Bonus part
+                setAdminLoading(false);
+            })
+            .catch(() => {
+                setAdminLoading(false);
             });
+        } else {
+            setAdminLoading(false);
         }
 
-    },[user])
-    return [admin,adminLoading]
-}
+    }, [user]);
 
+    return [admin, adminLoading];
+};
 
-export default useAdmin;
+export default useAdmin;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import auth from '../../firebase.init';
 import { signOut } from 'firebase/auth';
@@ -6,16 +6,18 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, Clock, Stethoscope, CreditCard, CheckCircle2 } from 'lucide-react';
+import { Calendar, Clock, Stethoscope, CreditCard, CheckCircle2, Trash2 } from 'lucide-react';
+import { toast } from 'react-toastify';
+import { BASE_URL } from '../../config';
 
 const MyAppointment = () => {
   const [appointments, setAppointments] = useState([]);
   const [user] = useAuthState(auth);
   const navigate = useNavigate();
 
-  useEffect(() => {
+  const fetchBookings = useCallback(() => {
     if (user) {
-      fetch(`https://doctors-portal-server-psi.vercel.app/booking?patient=${user.email}`, {
+      fetch(`${BASE_URL}/booking?patient=${user.email}`, {
         method: 'GET',
         headers: {
           authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -29,9 +31,34 @@ const MyAppointment = () => {
           }
           return res.json();
         })
-        .then((data) => setAppointments(Array.isArray(data) ? data : []));
+        .then((data) => setAppointments(Array.isArray(data) ? data : []))
+        .catch(() => setAppointments([]));
     }
   }, [user, navigate]);
+
+  useEffect(() => {
+    fetchBookings();
+  }, [fetchBookings]);
+
+  const handleCancelBooking = (id, treatment) => {
+    if (window.confirm(`Are you sure you want to cancel appointment for ${treatment}?`)) {
+      fetch(`${BASE_URL}/booking/${id}`, {
+        method: 'DELETE',
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.deletedCount > 0) {
+            toast.success(`Appointment for ${treatment} cancelled.`);
+            fetchBookings();
+          } else {
+            toast.error(data.message || 'Failed to cancel appointment.');
+          }
+        });
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -71,7 +98,7 @@ const MyAppointment = () => {
               <TableHead>Date</TableHead>
               <TableHead>Time Slot</TableHead>
               <TableHead>Treatment</TableHead>
-              <TableHead className="text-right">Payment Status</TableHead>
+              <TableHead className="text-right">Payment / Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -98,21 +125,32 @@ const MyAppointment = () => {
                   </div>
                 </TableCell>
                 <TableCell className="text-right">
-                  {a.price && !a.paid && (
-                    <Button size="sm" variant="default" className="h-7 text-xs gap-1 bg-emerald-600 hover:bg-emerald-700">
-                      <CreditCard className="h-3 w-3" /> Pay ${a.price}
+                  <div className="flex items-center justify-end gap-2">
+                    {a.price && !a.paid && (
+                      <Button size="sm" variant="default" className="h-7 text-xs gap-1 bg-emerald-600 hover:bg-emerald-700">
+                        <CreditCard className="h-3 w-3" /> Pay ${a.price}
+                      </Button>
+                    )}
+                    {a.price && a.paid && (
+                      <Badge variant="success" className="gap-1 text-xs">
+                        <CheckCircle2 className="h-3 w-3" /> Paid
+                      </Badge>
+                    )}
+                    {!a.price && (
+                      <Badge variant="secondary" className="text-xs">
+                        Free Consultation
+                      </Badge>
+                    )}
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => handleCancelBooking(a._id, a.treatment)}
+                      className="h-7 w-7 p-0 text-red-500 hover:bg-red-50 hover:text-red-600"
+                      title="Cancel Appointment"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
                     </Button>
-                  )}
-                  {a.price && a.paid && (
-                    <Badge variant="success" className="gap-1 text-xs">
-                      <CheckCircle2 className="h-3 w-3" /> Paid
-                    </Badge>
-                  )}
-                  {!a.price && (
-                    <Badge variant="secondary" className="text-xs">
-                      Free Consultation
-                    </Badge>
-                  )}
+                  </div>
                 </TableCell>
               </TableRow>
             ))}

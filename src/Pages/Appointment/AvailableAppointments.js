@@ -5,6 +5,7 @@ import BookingModal from './BookingModal';
 import { useQuery } from 'react-query';
 import Loading from '../Shared/Loading';
 import { Calendar as CalendarIcon } from 'lucide-react';
+import { BASE_URL } from '../../config';
 
 const AvailableAppointments = ({ date }) => {
   const [treatment, setTreatment] = useState(null);
@@ -16,7 +17,7 @@ const AvailableAppointments = ({ date }) => {
   const { data: services, isLoading, refetch } = useQuery(
     ['available', requestDateISO],
     () =>
-      fetch(`https://doctors-portal-server-psi.vercel.app/available?date=${requestDateISO}`).then((res) =>
+      fetch(`${BASE_URL}/available?date=${requestDateISO}`).then((res) =>
         res.json()
       )
   );

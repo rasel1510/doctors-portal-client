@@ -9,12 +9,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { UserPlus, UploadCloud } from 'lucide-react';
+import { BASE_URL } from '../../config';
 
 const AddDoctor = () => {
   const { register, formState: { errors }, handleSubmit, reset } = useForm();
 
   const { data: services, isLoading } = useQuery('services', () =>
-    fetch('https://doctors-portal-server-psi.vercel.app/service').then((res) => res.json())
+    fetch(`${BASE_URL}/service`).then((res) => res.json())
   );
 
   const imageStorageKey = '6d4c293ef648418de727023b7d745a1b';
@@ -40,7 +41,7 @@ const AddDoctor = () => {
             speciality: data.speciality,
           };
 
-          fetch('https://doctors-portal-server-psi.vercel.app/doctor', {
+          fetch(`${BASE_URL}/doctor`, {
             method: 'POST',
             headers: {
               'content-type': 'application/json',

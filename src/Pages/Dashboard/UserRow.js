@@ -4,12 +4,13 @@ import { TableRow, TableCell } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ShieldCheck, User, UserX } from 'lucide-react';
+import { BASE_URL } from '../../config';
 
 const UserRow = ({ user, index, refetch }) => {
   const { email, role } = user;
 
   const makeAdmin = () => {
-    fetch(`https://doctors-portal-server-psi.vercel.app/user/admin/${email}`, {
+    fetch(`${BASE_URL}/user/admin/${email}`, {
       method: 'PUT',
       headers: {
         authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -27,6 +28,33 @@ const UserRow = ({ user, index, refetch }) => {
           toast.success(`Successfully promoted ${email} to Admin!`);
         }
       });
+  };
+
+  const removeUser = () => {
+    if (email === 'rasel4897981@gmail.com') {
+      toast.error('Cannot remove primary admin account.');
+      return;
+    }
+    if (window.confirm(`Are you sure you want to remove user ${email}?`)) {
+      fetch(`${BASE_URL}/user/${email}`, {
+        method: 'DELETE',
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.deletedCount > 0) {
+            toast.success(`User ${email} removed successfully.`);
+            refetch();
+          } else {
+            toast.error(data.message || 'Failed to remove user.');
+          }
+        })
+        .catch(() => {
+          toast.error('Failed to remove user.');
+        });
+    }
   };
 
   return (
@@ -55,7 +83,13 @@ const UserRow = ({ user, index, refetch }) => {
         )}
       </TableCell>
       <TableCell className="text-right">
-        <Button size="sm" variant="ghost" className="h-8 text-xs text-red-500 hover:bg-red-50 hover:text-red-600">
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={removeUser}
+          disabled={email === 'rasel4897981@gmail.com'}
+          className="h-8 text-xs text-red-500 hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
+        >
           <UserX className="h-3.5 w-3.5 mr-1" /> Remove
         </Button>
       </TableCell>

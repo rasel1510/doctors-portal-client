@@ -5,20 +5,26 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import { BrowserRouter } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
-import {
- 
-  QueryClient,
-  QueryClientProvider,
-} from 'react-query'
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes in-memory cache freshness
+      cacheTime: 1000 * 60 * 15, // 15 minutes cache retention
+      refetchOnWindowFocus: false, // Prevents annoying re-fetching delay on tab switches
+      refetchOnReconnect: false,
+      retry: 1,
+    },
+  },
+});
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <App></App>
+        <App />
       </BrowserRouter>
     </QueryClientProvider>
   </React.StrictMode>
