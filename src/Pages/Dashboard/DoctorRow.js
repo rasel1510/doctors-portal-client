@@ -1,39 +1,41 @@
 import React from 'react';
-import { TableRow, TableCell } from '@/components/ui/table';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Stethoscope } from 'lucide-react';
+import { TableRow, TableCell } from '../../components/ui/table';
 
 const DoctorRow = ({ doctor, index, setDeletingDoctor }) => {
-  const { name, speciality, img } = doctor;
+  const { name, speciality, departmentName, img, qualification, experience, fee } = doctor;
 
   return (
     <TableRow>
-      <TableCell className="font-semibold text-slate-500">{index + 1}</TableCell>
+      <TableCell className="font-semibold text-slate-400">{index + 1}</TableCell>
       <TableCell>
-        <Avatar className="h-10 w-10 border border-slate-200 shadow-sm">
-          <AvatarImage src={img} alt={name} className="object-cover" />
-          <AvatarFallback className="bg-sky-500 text-white font-bold text-xs">
-            {name ? name.charAt(0) : 'D'}
-          </AvatarFallback>
-        </Avatar>
+        <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center bg-teal-50 border border-teal-100">
+          {img ? (
+            <img src={img} alt={name} className="w-full h-full object-cover object-top" />
+          ) : (
+            <Stethoscope className="h-5 w-5 text-teal-600" />
+          )}
+        </div>
       </TableCell>
-      <TableCell className="font-bold text-slate-900">{name}</TableCell>
       <TableCell>
-        <Badge variant="secondary" className="text-xs bg-sky-50 text-sky-700 border-sky-100">
-          {speciality}
-        </Badge>
+        <div className="font-bold text-slate-900">Dr. {name}</div>
+        <div className="text-[11px] text-slate-400">{doctor.email}</div>
       </TableCell>
+      <TableCell>
+        <span className="inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold bg-teal-50 text-teal-700 border border-teal-100">
+          {departmentName || speciality || 'General'}
+        </span>
+        <div className="text-[11px] text-slate-500 mt-0.5">{qualification || 'MBBS'} · {experience || 5} yrs</div>
+      </TableCell>
+      <TableCell className="font-bold text-teal-700">৳{fee || 500}</TableCell>
       <TableCell className="text-right">
-        <Button
-          size="sm"
-          variant="destructive"
+        <button
           onClick={() => setDeletingDoctor(doctor)}
-          className="h-8 text-xs gap-1"
+          className="p-2 rounded-lg text-red-600 hover:bg-red-50 transition-colors"
+          title="Delete Doctor"
         >
-          <Trash2 className="h-3.5 w-3.5" /> Delete
-        </Button>
+          <Trash2 className="h-4 w-4" />
+        </button>
       </TableCell>
     </TableRow>
   );

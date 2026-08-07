@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    --background: 210 40% 98%;
+    --background: 0 0% 98%;
     --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
@@ -15,84 +15,253 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 199 89% 48%; /* Teal / Sky Blue #0EA5E9 */
-    --primary-foreground: 210 40% 98%;
+    --primary: 174 84% 32%; /* Teal #0D9488 */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 187 92% 41%; /* Cyan #06B6D4 */
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 174 60% 90%;
+    --secondary-foreground: 174 84% 20%;
 
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 239 84% 67%; /* Indigo / Medical Navy */
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 221 83% 53%; /* Medical Blue */
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 199 89% 48%;
+    --ring: 174 84% 32%;
 
     --radius: 0.75rem;
+
+    /* MediCare Pro custom tokens */
+    --mc-teal: #0D9488;
+    --mc-teal-light: #CCFBF1;
+    --mc-teal-dark: #0F766E;
+    --mc-navy: #0F172A;
+    --mc-blue: #3B82F6;
+    --mc-amber: #F59E0B;
+    --mc-emerald: #10B981;
+    --mc-rose: #F43F5E;
   }
 
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
-
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
-
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
-
-    --primary: 199 89% 48%;
+    --primary: 174 84% 40%;
     --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 187 92% 41%;
+    --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
-
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
-
     --accent: 217.2 32.6% 17.5%;
     --accent-foreground: 210 40% 98%;
-
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    --ring: 174 84% 40%;
   }
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
+  * { @apply border-border; }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Inter', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    font-weight: 700;
   }
 }
 
-/* Custom Utilities */
+/* ─── MediCare Pro Design Utilities ─────────────────────────────────────────── */
+
+/* Glass Morphism */
 .glass-card {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
-.gradient-bg {
-  background: linear-gradient(135deg, #0EA5E9 0%, #06B6D4 50%, #3B82F6 100%);
+.glass-dark {
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Gradients */
+.gradient-primary {
+  background: linear-gradient(135deg, #0D9488 0%, #0891B2 50%, #3B82F6 100%);
+}
+
+.gradient-hero {
+  background: linear-gradient(135deg, #0F172A 0%, #0D4F47 40%, #0D9488 100%);
+}
+
+.gradient-card {
+  background: linear-gradient(135deg, rgba(13,148,136,0.08) 0%, rgba(59,130,246,0.06) 100%);
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+  background: linear-gradient(135deg, #0D9488 0%, #0891B2 50%, #3B82F6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-amber {
+  background: linear-gradient(135deg, #F59E0B 0%, #EF4444 100%);
+}
+
+/* Status Badge Colors */
+.status-pending {
+  background: #FEF3C7;
+  color: #92400E;
+  border: 1px solid #FCD34D;
+}
+.status-visited {
+  background: #D1FAE5;
+  color: #065F46;
+  border: 1px solid #6EE7B7;
+}
+.status-cancelled {
+  background: #FEE2E2;
+  color: #991B1B;
+  border: 1px solid #FCA5A5;
+}
+.status-paid {
+  background: #DBEAFE;
+  color: #1E40AF;
+  border: 1px solid #93C5FD;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(13, 148, 136, 0.4); }
+  50% { box-shadow: 0 0 0 12px rgba(13, 148, 136, 0); }
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-fade-up { animation: fadeInUp 0.5s ease-out forwards; }
+.animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+.animate-slide-left { animation: slideInLeft 0.5s ease-out forwards; }
+.animate-float { animation: float 3s ease-in-out infinite; }
+.animate-pulse-glow { animation: pulseGlow 2s ease-in-out infinite; }
+
+/* Stagger animation delays */
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+.delay-500 { animation-delay: 0.5s; }
+
+/* Skeleton shimmer */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Card hover effects */
+.card-hover {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -12px rgba(13, 148, 136, 0.18);
+}
+
+.dept-card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.dept-card-hover:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.15);
+}
+
+/* Doctor card */
+.doc-card-hover {
+  transition: all 0.3s ease;
+}
+.doc-card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px -8px rgba(13, 148, 136, 0.2);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #F1F5F9; }
+::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+
+/* Section patterns */
+.dot-pattern {
+  background-image: radial-gradient(circle, #0D9488 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.06;
+}
+
+/* Input focus ring */
+.mc-input:focus {
+  outline: none;
+  border-color: #0D9488;
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+}
+
+/* Step indicator */
+.step-active { 
+  background: linear-gradient(135deg, #0D9488, #0891B2);
+  color: white;
+  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.4);
+}
+.step-done {
+  background: #CCFBF1;
+  color: #0D9488;
+}
+.step-inactive {
+  background: #F1F5F9;
+  color: #94A3B8;
+}
+
+/* Stat card */
+.stat-card {
+  background: white;
+  border: 1px solid #E2E8F0;
+  border-radius: 1rem;
+  transition: all 0.25s ease;
+}
+.stat-card:hover {
+  border-color: #0D9488;
+  box-shadow: 0 8px 24px rgba(13,148,136,0.1);
 }

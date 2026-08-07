@@ -1,59 +1,119 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import doctor from '../../assets/images/doctor.png';
-import appointment from '../../assets/images/appointment.png';
-import { Button } from '@/components/ui/button';
-import { Calendar, ArrowRight } from 'lucide-react';
+import { ShieldCheck, Clock, CreditCard, Headphones, FileText, UserCheck } from 'lucide-react';
 
-const MakeAppointment = () => {
+const features = [
+  {
+    icon: ShieldCheck,
+    title: 'BMDC Certified Doctors',
+    desc: 'All our doctors are certified by the Bangladesh Medical & Dental Council with verified credentials.',
+    color: '#0D9488',
+    bg: '#CCFBF1',
+  },
+  {
+    icon: FileText,
+    title: 'Digital Health Records',
+    desc: 'Access your complete appointment history, prescriptions and invoices anytime from your dashboard.',
+    color: '#3B82F6',
+    bg: '#DBEAFE',
+  },
+  {
+    icon: CreditCard,
+    title: 'Transparent Pricing',
+    desc: 'No hidden charges. See consultation fees upfront before booking. Flexible payment options.',
+    color: '#8B5CF6',
+    bg: '#EDE9FE',
+  },
+  {
+    icon: Clock,
+    title: 'Flexible Scheduling',
+    desc: 'Multiple daily time slots across all departments, 6 days a week. Book at your convenience.',
+    color: '#F59E0B',
+    bg: '#FEF3C7',
+  },
+  {
+    icon: UserCheck,
+    title: 'Experienced Specialists',
+    desc: 'Over 10 years of average experience. Multi-specialty expertise for complex health conditions.',
+    color: '#EC4899',
+    bg: '#FCE7F3',
+  },
+  {
+    icon: Headphones,
+    title: '24/7 Support',
+    desc: 'Our patient support team is available round the clock for queries, follow-ups and emergencies.',
+    color: '#EF4444',
+    bg: '#FEE2E2',
+  },
+];
+
+const WhyChooseUs = () => {
   return (
-    <section
-      style={{
-        background: `linear-gradient(to right, rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.88)), url(${appointment})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
-      className="my-28 rounded-3xl overflow-hidden shadow-2xl relative"
-    >
-      <div className="max-w-7xl mx-auto px-6 sm:px-12 py-12 lg:py-0 flex flex-col lg:flex-row items-center gap-10">
-        
-        {/* Doctor Image (hidden on mobile, overflowing on desktop) */}
-        <div className="hidden lg:block lg:w-1/2 relative">
-          <img
-            className="mt-[-110px] mb-[-40px] max-h-[580px] w-auto mx-auto object-contain filter drop-shadow-2xl"
-            src={doctor}
-            alt="Doctor"
-          />
-        </div>
+    <section className="py-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          {/* Left */}
+          <div className="space-y-6">
+            <div>
+              <span className="inline-block text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4"
+                style={{ background: '#CCFBF1', color: '#0D9488', border: '1px solid #5EEAD4' }}>
+                Why MediCare Pro?
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight"
+                style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+                Healthcare You Can{' '}
+                <span style={{
+                  background: 'linear-gradient(135deg, #0D9488, #3B82F6)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}>
+                  Trust
+                </span>
+              </h2>
+              <div className="w-16 h-1 rounded-full mt-4" style={{ background: 'linear-gradient(90deg, #0D9488, #3B82F6)' }} />
+            </div>
+            <p className="text-slate-600 text-base leading-relaxed">
+              We combine medical expertise with modern technology to deliver a seamless healthcare experience. 
+              From booking to billing, every step is designed with your comfort in mind.
+            </p>
 
-        {/* Text Content */}
-        <div className="w-full lg:w-1/2 space-y-6 text-white text-center lg:text-left py-6 lg:py-16">
-          <span className="text-xs font-bold uppercase tracking-wider text-sky-400 bg-sky-950/90 border border-sky-800 px-3.5 py-1.5 rounded-full inline-block">
-            Instant Scheduling
-          </span>
+            {/* Key metric bar */}
+            <div className="grid grid-cols-3 gap-4 mt-6">
+              {[
+                { val: '98%', label: 'Patient Satisfaction' },
+                { val: '< 5min', label: 'Avg. Booking Time' },
+                { val: '50+', label: 'Expert Doctors' },
+              ].map((m, i) => (
+                <div key={i} className="text-center p-4 rounded-2xl border border-slate-100 shadow-sm bg-white">
+                  <div className="text-2xl font-extrabold" style={{ color: '#0D9488' }}>{m.val}</div>
+                  <div className="text-xs text-slate-500 font-medium mt-1">{m.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
-            Make An Appointment <br /> Today
-          </h2>
-
-          <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-xl mx-auto lg:mx-0">
-            Skip the long phone queues and waiting rooms. Select your preferred date and specialist online, and manage all your healthcare appointments seamlessly in your patient portal dashboard.
-          </p>
-
-          <div>
-            <Link to="/appointment">
-              <Button size="lg" className="bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold gap-2 text-base">
-                <Calendar className="h-5 w-5" />
-                Book Your Appointment
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
+          {/* Right — Features grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {features.map((feat, i) => {
+              const Icon = feat.icon;
+              return (
+                <div key={i} className="card-hover p-5 rounded-2xl border border-slate-100 bg-white shadow-sm group">
+                  <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform"
+                    style={{ background: feat.bg }}>
+                    <Icon className="h-5 w-5" style={{ color: feat.color }} />
+                  </div>
+                  <h4 className="text-sm font-bold text-slate-900 mb-1.5" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+                    {feat.title}
+                  </h4>
+                  <p className="text-xs text-slate-500 leading-relaxed">{feat.desc}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
-
       </div>
     </section>
   );
 };
 
-export default MakeAppointment;
+export default WhyChooseUs;
