@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useCreateUserWithEmailAndPassword, useSignInWithGoogle, useUpdateProfile } from 'react-firebase-hooks/auth';
+import { useAuthState, useCreateUserWithEmailAndPassword, useSignInWithGoogle, useUpdateProfile } from 'react-firebase-hooks/auth';
 import auth from '../../firebase.init';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
@@ -41,6 +41,7 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
 
+  const [authUser] = useAuthState(auth);
   const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
   const { register, formState: { errors }, handleSubmit, setValue } = useForm();
   const [
@@ -51,17 +52,17 @@ const SignUp = () => {
   ] = useCreateUserWithEmailAndPassword(auth);
 
   const [updateProfile, updating, updateError] = useUpdateProfile(auth);
-  const [token] = useToken(user || gUser);
+  const [token] = useToken(user || gUser || authUser);
   const navigate = useNavigate();
 
   const activeError = error || gError || updateError;
   const errorInfo = getFriendlyErrorMessage(activeError);
 
   useEffect(() => {
-    if (token) {
-      navigate('/appointment');
+    if (token || user || gUser || authUser) {
+      navigate('/appointment', { replace: true });
     }
-  }, [token, navigate]);
+  }, [token, user, gUser, authUser, navigate]);
 
   // Auto trigger domain help modal if unauthorized domain error detected
   useEffect(() => {

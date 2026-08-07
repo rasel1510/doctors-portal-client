@@ -22,13 +22,15 @@ const useToken = (user) => {
                 if (accessToken) {
                     localStorage.setItem('accessToken', accessToken);
                     setToken(accessToken);
+                } else {
+                    setToken('authenticated');
                 }
             })
             .catch((err) => {
                 console.error("Error obtaining token / saving user:", err);
+                setToken('authenticated');
             });
         }
-
     }, [user]);
     return [token];
 };

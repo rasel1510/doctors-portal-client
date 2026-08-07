@@ -8,8 +8,8 @@ const RequireAuth = ({children}) => {
     const [user, loading] = useAuthState(auth);
     let location = useLocation();
     
-    if(loading){
-        <Loading></Loading>
+    if (loading) {
+        return <Loading />;
     }
 
    

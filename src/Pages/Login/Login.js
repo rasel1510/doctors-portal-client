@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSignInWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth';
+import { useAuthState, useSignInWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth';
 import auth from '../../firebase.init';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
@@ -38,6 +38,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
 
+  const [authUser] = useAuthState(auth);
   const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
   const { register, formState: { errors }, handleSubmit, setValue } = useForm();
   const [
@@ -47,19 +48,23 @@ const Login = () => {
     error,
   ] = useSignInWithEmailAndPassword(auth);
 
-  const [token] = useToken(user || gUser);
+  const [token] = useToken(user || gUser || authUser);
   const navigate = useNavigate();
   const location = useLocation();
-  let from = location.state?.from?.pathname || "/";
+
+  let targetPath = location.state?.from?.pathname;
+  if (!targetPath || targetPath === '/' || targetPath === '/login' || targetPath === '/singup') {
+    targetPath = '/appointment';
+  }
 
   const activeError = error || gError;
   const errorInfo = getFriendlyErrorMessage(activeError);
 
   useEffect(() => {
-    if (token) {
-      navigate(from, { replace: true });
+    if (token || user || gUser || authUser) {
+      navigate(targetPath, { replace: true });
     }
-  }, [token, navigate, from]);
+  }, [token, user, gUser, authUser, navigate, targetPath]);
 
   // Automatically trigger domain help modal if unauthorized domain error detected
   useEffect(() => {
