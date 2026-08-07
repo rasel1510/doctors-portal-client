@@ -7,7 +7,6 @@ import { toast } from 'react-toastify';
 const AuthDomainHelpModal = ({ isOpen, onClose, customDomain }) => {
   const [copied, setCopied] = useState(false);
   const currentDomain = customDomain || (typeof window !== 'undefined' ? window.location.hostname : '');
-  const currentPort = typeof window !== 'undefined' && window.location.port ? `:${window.location.port}` : '';
   const fullOrigin = typeof window !== 'undefined' ? window.location.origin : '';
 
   const handleCopy = async () => {
