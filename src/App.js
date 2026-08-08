@@ -23,6 +23,7 @@ import RequireAuth from './Pages/Login/RequireAuth';
 import SignUp from './Pages/Login/SignUp';
 import Navbar from './Pages/Shared/Navbar';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
+import OfflineBanner from './components/OfflineBanner';
 import { Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -31,6 +32,7 @@ function App() {
   return (
     <div className="min-h-screen bg-slate-50/40 text-slate-900 flex flex-col font-sans selection:bg-teal-500 selection:text-white">
       <Navbar />
+      <OfflineBanner />
       <main className="flex-1">
         <Routes>
           <Route path="/" element={<Home />} />

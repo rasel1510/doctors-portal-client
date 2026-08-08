@@ -87,7 +87,7 @@ const SignUp = () => {
   return (
     <div className="min-h-[85vh] flex items-center justify-center py-8 px-4 sm:px-6 lg:px-8 bg-slate-50/50">
       <div className="w-full max-w-md space-y-5">
-        
+
         {/* Brand Header */}
         <div className="text-center space-y-2">
           <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl text-white shadow-lg shadow-teal-500/20" style={{ background: '#0D9488' }}>
@@ -113,11 +113,10 @@ const SignUp = () => {
 
             {/* Display Friendly Error Alert */}
             {errorInfo && (
-              <div className={`p-3.5 rounded-2xl border text-xs flex items-start gap-2.5 transition-all ${
-                errorInfo.isDomainError 
-                  ? 'bg-amber-50 border-amber-200 text-amber-900' 
+              <div className={`p-3.5 rounded-2xl border text-xs flex items-start gap-2.5 transition-all ${errorInfo.isDomainError
+                  ? 'bg-amber-50 border-amber-200 text-amber-900'
                   : 'bg-red-50 border-red-200 text-red-700'
-              }`}>
+                }`}>
                 <AlertTriangle className={`h-4 w-4 shrink-0 mt-0.5 ${errorInfo.isDomainError ? 'text-amber-600' : 'text-red-500'}`} />
                 <div className="flex-1 space-y-1">
                   <p className="font-semibold leading-relaxed">{errorInfo.text}</p>
@@ -135,7 +134,7 @@ const SignUp = () => {
             )}
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-              
+
               {/* Full Name */}
               <div className="space-y-1.5">
                 <Label htmlFor="name" className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
@@ -275,13 +274,7 @@ const SignUp = () => {
                 <Sparkles className="h-3 w-3 text-amber-500" /> Auto-fill Sample Data
               </button>
 
-              <button
-                type="button"
-                onClick={() => setIsHelpOpen(true)}
-                className="font-medium text-slate-500 hover:text-slate-800 flex items-center gap-1 py-1"
-              >
-                <HelpCircle className="h-3 w-3 text-sky-600" /> Domain Help
-              </button>
+
             </div>
 
           </CardContent>

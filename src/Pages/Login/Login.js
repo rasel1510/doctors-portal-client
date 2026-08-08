@@ -4,7 +4,7 @@ import auth from '../../firebase.init';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import useToken from '../../hooks/useToken';
-import { LogIn, Mail, Lock, Eye, EyeOff, Stethoscope, HelpCircle, Loader2, Sparkles, AlertTriangle } from 'lucide-react';
+import { LogIn, Mail, Lock, Eye, EyeOff, Stethoscope, HelpCircle, Loader2, Sparkles, AlertTriangle, WifiOff } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -37,6 +37,7 @@ const getFriendlyErrorMessage = (err) => {
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   const [authUser] = useAuthState(auth);
   const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
@@ -66,6 +67,18 @@ const Login = () => {
     }
   }, [token, user, gUser, authUser, navigate, targetPath]);
 
+  // Track network connectivity for offline-aware login UI
+  useEffect(() => {
+    const goOnline = () => setIsOnline(true);
+    const goOffline = () => setIsOnline(false);
+    window.addEventListener('online', goOnline);
+    window.addEventListener('offline', goOffline);
+    return () => {
+      window.removeEventListener('online', goOnline);
+      window.removeEventListener('offline', goOffline);
+    };
+  }, []);
+
   // Automatically trigger domain help modal if unauthorized domain error detected
   useEffect(() => {
     if (errorInfo?.isDomainError) {
@@ -74,7 +87,19 @@ const Login = () => {
   }, [errorInfo]);
 
   const onSubmit = data => {
+    if (!navigator.onLine) {
+      setIsOnline(false);
+      return;
+    }
     signInWithEmailAndPassword(data.email, data.password);
+  };
+
+  const handleGoogleSignIn = () => {
+    if (!navigator.onLine) {
+      setIsOnline(false);
+      return;
+    }
+    signInWithGoogle();
   };
 
   // Fast Auto-fill for mobile testing
@@ -86,7 +111,7 @@ const Login = () => {
   return (
     <div className="min-h-[85vh] flex items-center justify-center py-8 px-4 sm:px-6 lg:px-8 bg-slate-50/50">
       <div className="w-full max-w-md space-y-5">
-        
+
         {/* Brand Header */}
         <div className="text-center space-y-2">
           <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl text-white shadow-lg shadow-teal-500/20" style={{ background: '#0D9488' }}>
@@ -109,14 +134,30 @@ const Login = () => {
           </CardHeader>
 
           <CardContent className="space-y-4">
-            
+
+            {/* Offline Warning Banner */}
+            {!isOnline && (
+              <div className="p-3.5 rounded-2xl border text-xs flex items-start gap-2.5 transition-all bg-slate-900 border-slate-700 text-slate-100">
+                <WifiOff className="h-4 w-4 shrink-0 mt-0.5 text-amber-400" />
+                <div className="flex-1 space-y-1">
+                  <p className="font-semibold leading-relaxed text-white">You're Currently Offline</p>
+                  <p className="text-[11px] text-slate-300 leading-relaxed">
+                    Sign-in requires an internet connection to verify your credentials securely.
+                    Please connect to Wi-Fi or mobile data and try again.
+                  </p>
+                  <p className="text-[10px] text-slate-400 mt-1">
+                    💡 <strong>Tip:</strong> Once logged in, your session persists offline — you won't need to sign in again.
+                  </p>
+                </div>
+              </div>
+            )}
+
             {/* Display Friendly Error Alert */}
             {errorInfo && (
-              <div className={`p-3.5 rounded-2xl border text-xs flex items-start gap-2.5 transition-all ${
-                errorInfo.isDomainError 
-                  ? 'bg-amber-50 border-amber-200 text-amber-900' 
+              <div className={`p-3.5 rounded-2xl border text-xs flex items-start gap-2.5 transition-all ${errorInfo.isDomainError
+                  ? 'bg-amber-50 border-amber-200 text-amber-900'
                   : 'bg-red-50 border-red-200 text-red-700'
-              }`}>
+                }`}>
                 <AlertTriangle className={`h-4 w-4 shrink-0 mt-0.5 ${errorInfo.isDomainError ? 'text-amber-600' : 'text-red-500'}`} />
                 <div className="flex-1 space-y-1">
                   <p className="font-semibold leading-relaxed">{errorInfo.text}</p>
@@ -134,7 +175,7 @@ const Login = () => {
             )}
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-              
+
               {/* Email Input */}
               <div className="space-y-1.5">
                 <Label htmlFor="email" className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
@@ -196,13 +237,17 @@ const Login = () => {
               {/* Submit Button with Inline Loading */}
               <Button
                 type="submit"
-                disabled={loading || gLoading}
-                className="w-full font-bold h-11 text-sm rounded-xl text-white transition-all shadow-md active:scale-[0.99]"
+                disabled={loading || gLoading || !isOnline}
+                className="w-full font-bold h-11 text-sm rounded-xl text-white transition-all shadow-md active:scale-[0.99] disabled:opacity-60"
                 style={{ background: '#0D9488' }}
               >
                 {loading ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" /> Signing In...
+                  </>
+                ) : !isOnline ? (
+                  <>
+                    <WifiOff className="h-4 w-4 mr-2" /> Offline — Can't Sign In
                   </>
                 ) : (
                   <>
@@ -229,8 +274,8 @@ const Login = () => {
             {/* Google Sign In Button with Inline Loading */}
             <Button
               type="button"
-              onClick={() => signInWithGoogle()}
-              disabled={loading || gLoading}
+              onClick={handleGoogleSignIn}
+              disabled={loading || gLoading || !isOnline}
               variant="outline"
               className="w-full h-11 font-semibold text-slate-700 hover:bg-slate-50 rounded-xl border-slate-200 active:scale-[0.99] transition-all"
             >
@@ -261,13 +306,7 @@ const Login = () => {
                 <Sparkles className="h-3 w-3 text-amber-500" /> Auto-fill Demo Account
               </button>
 
-              <button
-                type="button"
-                onClick={() => setIsHelpOpen(true)}
-                className="font-medium text-slate-500 hover:text-slate-800 flex items-center gap-1 py-1"
-              >
-                <HelpCircle className="h-3 w-3 text-sky-600" /> Domain Help
-              </button>
+
             </div>
 
           </CardContent>
