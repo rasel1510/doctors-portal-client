@@ -6,43 +6,36 @@ const PWAInstallPrompt = ({ triggerOnHome = false }) => {
   const [isIOS, setIsIOS] = useState(false);
 
   useEffect(() => {
-    // Clear old storage keys from previous version to avoid blocking
-    localStorage.removeItem('pwa_prompt_dismissed');
-    sessionStorage.removeItem('pwa_modal_shown');
-
     // Never show if already running as installed PWA
     const isStandalone =
       window.matchMedia('(display-mode: standalone)').matches ||
       window.navigator.standalone === true;
     if (isStandalone) return;
 
-    // Detect iOS
+    // Never show if user explicitly said "Don't Ask Again"
+    if (localStorage.getItem('pwa_never_show') === '1') return;
+
+    // Detect iOS Safari
     const ua = window.navigator.userAgent.toLowerCase();
     if (/iphone|ipad|ipod/.test(ua)) setIsIOS(true);
 
-    // Capture Chrome/Android install prompt
+    // Capture Android/Chrome native install event
     const handleBeforeInstall = (e) => {
       e.preventDefault();
       setDeferredPrompt(e);
     };
     window.addEventListener('beforeinstallprompt', handleBeforeInstall);
 
-    // Show modal on home page — once per session
+    // Show modal automatically on home page after short delay
+    let timer;
     if (triggerOnHome) {
-      const shownThisSession = sessionStorage.getItem('pwa_v2_shown');
-      if (!shownThisSession) {
-        const timer = setTimeout(() => {
-          setShowModal(true);
-          sessionStorage.setItem('pwa_v2_shown', '1');
-        }, 1200);
-        return () => {
-          clearTimeout(timer);
-          window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
-        };
-      }
+      timer = setTimeout(() => {
+        setShowModal(true);
+      }, 1200);
     }
 
     return () => {
+      clearTimeout(timer);
       window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -59,115 +52,170 @@ const PWAInstallPrompt = ({ triggerOnHome = false }) => {
   const handleClose = () => setShowModal(false);
 
   const handleNeverShow = () => {
+    localStorage.setItem('pwa_never_show', '1');
     setShowModal(false);
-    // Use session-only flag for "not now" feel, but mark as seen permanently
-    localStorage.setItem('pwa_v2_dismissed', '1');
   };
 
   if (!showModal) return null;
 
   return (
     <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
-      style={{ background: 'rgba(2, 6, 23, 0.70)', backdropFilter: 'blur(6px)' }}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 99999,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '16px',
+        background: 'rgba(2, 6, 23, 0.72)',
+        backdropFilter: 'blur(6px)',
+      }}
       onClick={handleClose}
     >
       <div
-        className="relative w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl"
         style={{
-          animation: 'pwaIn 0.4s cubic-bezier(0.22,1,0.36,1) both',
+          position: 'relative',
+          width: '100%',
+          maxWidth: '360px',
+          borderRadius: '24px',
+          overflow: 'hidden',
+          boxShadow: '0 25px 60px rgba(0,0,0,0.4)',
+          animation: 'pwaModalIn 0.38s cubic-bezier(0.22,1,0.36,1) both',
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
+        {/* ── Header ── */}
         <div
-          className="px-6 pt-8 pb-7 text-white text-center"
-          style={{ background: 'linear-gradient(135deg, #0D9488 0%, #0284C7 100%)' }}
+          style={{
+            background: 'linear-gradient(135deg, #0D9488 0%, #0284C7 100%)',
+            padding: '32px 24px 24px',
+            textAlign: 'center',
+            color: '#fff',
+          }}
         >
-          {/* App icon */}
-          <div className="mx-auto mb-5 w-16 h-16 rounded-2xl bg-white/25 flex items-center justify-center shadow-lg">
-            <svg className="w-9 h-9" fill="none" stroke="white" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round"
-                d="M12 2v20M2 12h20" />
-              <rect x="7" y="7" width="10" height="10" rx="2"
-                fill="white" fillOpacity="0.2" stroke="none" />
+          {/* Icon */}
+          <div style={{
+            width: 64, height: 64,
+            borderRadius: 18,
+            background: 'rgba(255,255,255,0.22)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            margin: '0 auto 16px',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+          }}>
+            <svg width="34" height="34" fill="none" stroke="white" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
             </svg>
           </div>
-          <h2 className="text-xl font-extrabold tracking-tight leading-tight">
+          <h2 style={{ fontSize: 20, fontWeight: 800, margin: 0, letterSpacing: '-0.3px' }}>
             Install MediCare Pro
           </h2>
         </div>
 
-        {/* Body */}
-        <div className="bg-white px-6 pb-6 pt-5 space-y-4">
+        {/* ── Body ── */}
+        <div style={{ background: '#fff', padding: '20px 24px 24px' }}>
 
-          {/* iOS instruction */}
+          {/* iOS instructions */}
           {isIOS && (
-            <div className="bg-sky-50 border border-sky-200 rounded-2xl p-3.5 text-xs text-sky-900 leading-relaxed">
-              <p className="font-bold mb-1">📱 To install on iPhone / iPad:</p>
-              <p>
-                Tap the <strong>Share</strong> button{' '}
-                <span className="inline-block border border-sky-400 rounded px-1 font-mono">⬆</span>{' '}
-                in Safari, then select <strong>"Add to Home Screen"</strong>.
+            <div style={{
+              background: '#f0f9ff', border: '1px solid #bae6fd',
+              borderRadius: 14, padding: '12px 14px',
+              fontSize: 12, color: '#0c4a6e', lineHeight: 1.6, marginBottom: 16,
+            }}>
+              <p style={{ fontWeight: 700, margin: '0 0 4px' }}>📱 To install on iPhone / iPad:</p>
+              <p style={{ margin: 0 }}>
+                Tap the <strong>Share</strong> button (⬆) in Safari, then select{' '}
+                <strong>"Add to Home Screen"</strong>.
               </p>
             </div>
           )}
 
-          {/* Android / Desktop — native install button */}
+          {/* Android/Desktop — native install button */}
           {!isIOS && deferredPrompt && (
             <button
               onClick={handleInstall}
-              className="w-full h-12 rounded-2xl font-bold text-sm text-white shadow-md transition-all active:scale-[0.97]"
-              style={{ background: 'linear-gradient(135deg, #0D9488, #0284C7)' }}
+              style={{
+                width: '100%', height: 48, borderRadius: 14,
+                border: 'none', cursor: 'pointer',
+                background: 'linear-gradient(135deg, #0D9488, #0284C7)',
+                color: '#fff', fontWeight: 700, fontSize: 14,
+                marginBottom: 12, boxShadow: '0 4px 12px rgba(13,148,136,0.35)',
+                transition: 'opacity .15s',
+              }}
+              onMouseOver={e => e.target.style.opacity = '0.88'}
+              onMouseOut={e => e.target.style.opacity = '1'}
             >
               📲 Install App Now
             </button>
           )}
 
-          {/* Android / Desktop — no native prompt yet (manual instructions) */}
+          {/* Android/Desktop — manual instructions when no native prompt */}
           {!isIOS && !deferredPrompt && (
-            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-xs text-slate-700 leading-relaxed">
-              <p className="font-bold mb-1">📲 How to install:</p>
-              <p>
+            <div style={{
+              background: '#f8fafc', border: '1px solid #e2e8f0',
+              borderRadius: 14, padding: '12px 14px',
+              fontSize: 12, color: '#475569', lineHeight: 1.6, marginBottom: 16,
+            }}>
+              <p style={{ fontWeight: 700, margin: '0 0 4px' }}>📲 How to install:</p>
+              <p style={{ margin: 0 }}>
                 Open in <strong>Chrome</strong>, tap the menu <strong>(⋮)</strong>, then choose{' '}
-                <strong>"Add to Home Screen"</strong> or <strong>"Install App"</strong>.
+                <strong>"Add to Home Screen"</strong>.
               </p>
             </div>
           )}
 
           {/* Action buttons */}
-          <div className="flex gap-2.5 pt-1">
+          <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
             <button
               onClick={handleClose}
-              className="flex-1 h-11 rounded-2xl border-2 border-teal-500 text-teal-700 text-sm font-bold hover:bg-teal-50 transition active:scale-[0.98]"
+              style={{
+                flex: 1, height: 44, borderRadius: 12, cursor: 'pointer',
+                border: '2px solid #0D9488', background: 'transparent',
+                color: '#0D9488', fontWeight: 700, fontSize: 13,
+                transition: 'background .15s',
+              }}
+              onMouseOver={e => e.currentTarget.style.background = '#f0fdfa'}
+              onMouseOut={e => e.currentTarget.style.background = 'transparent'}
             >
               Not Now
             </button>
             <button
               onClick={handleNeverShow}
-              className="flex-1 h-11 rounded-2xl border border-slate-200 text-slate-400 text-xs font-medium hover:bg-slate-50 transition"
+              style={{
+                flex: 1, height: 44, borderRadius: 12, cursor: 'pointer',
+                border: '1px solid #e2e8f0', background: 'transparent',
+                color: '#94a3b8', fontSize: 12, fontWeight: 500,
+                transition: 'background .15s',
+              }}
+              onMouseOver={e => e.currentTarget.style.background = '#f8fafc'}
+              onMouseOut={e => e.currentTarget.style.background = 'transparent'}
             >
               Don't Ask Again
             </button>
           </div>
         </div>
 
-        {/* Close X button */}
+        {/* Close X */}
         <button
           onClick={handleClose}
-          className="absolute top-3.5 right-3.5 w-8 h-8 rounded-full bg-white/25 hover:bg-white/40 flex items-center justify-center text-white transition"
           aria-label="Close"
+          style={{
+            position: 'absolute', top: 12, right: 12,
+            width: 30, height: 30, borderRadius: '50%',
+            background: 'rgba(255,255,255,0.25)', border: 'none',
+            cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+          <svg width="14" height="14" fill="none" stroke="white" strokeWidth="2.5" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
 
       <style>{`
-        @keyframes pwaIn {
-          from { opacity: 0; transform: scale(0.85) translateY(30px); }
-          to   { opacity: 1; transform: scale(1) translateY(0); }
+        @keyframes pwaModalIn {
+          from { opacity: 0; transform: scale(0.84) translateY(28px); }
+          to   { opacity: 1; transform: scale(1)    translateY(0);    }
         }
       `}</style>
     </div>
