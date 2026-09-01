@@ -4,12 +4,28 @@ import auth from '../../firebase.init';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import useToken from '../../hooks/useToken';
-import { LogIn, Mail, Lock, Eye, EyeOff, Stethoscope, HelpCircle, Loader2, Sparkles, AlertTriangle, WifiOff } from 'lucide-react';
+import {
+  LogIn, Mail, Lock, Eye, EyeOff, Stethoscope, HelpCircle,
+  Loader2, AlertTriangle, WifiOff, ShieldCheck, HeartPulse
+} from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthDomainHelpModal from '@/components/auth/AuthDomainHelpModal';
+
+const DEMO_ACCOUNTS = {
+  admin: {
+    email: 'demo.admin@medicare.com',
+    password: 'MedicareAdmin2026!',
+    redirect: '/dashboard/overview',
+  },
+  patient: {
+    email: 'demo.patient@medicare.com',
+    password: 'MedicarePatient2026!',
+    redirect: '/dashboard',
+  }
+};
 
 const getFriendlyErrorMessage = (err) => {
   if (!err) return null;
@@ -38,6 +54,8 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [demoActionLoading, setDemoActionLoading] = useState(null); // 'admin' | 'patient' | null
+  const [customDestination, setCustomDestination] = useState(null);
 
   const [authUser] = useAuthState(auth);
   const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
@@ -53,9 +71,9 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  let targetPath = location.state?.from?.pathname;
-  if (!targetPath || targetPath === '/' || targetPath === '/login' || targetPath === '/singup') {
-    targetPath = '/appointment';
+  let defaultPath = location.state?.from?.pathname;
+  if (!defaultPath || defaultPath === '/' || defaultPath === '/login' || defaultPath === '/singup') {
+    defaultPath = '/appointment';
   }
 
   const activeError = error || gError;
@@ -63,11 +81,12 @@ const Login = () => {
 
   useEffect(() => {
     if (token || user || gUser || authUser) {
-      navigate(targetPath, { replace: true });
+      const target = customDestination || defaultPath;
+      navigate(target, { replace: true });
     }
-  }, [token, user, gUser, authUser, navigate, targetPath]);
+  }, [token, user, gUser, authUser, navigate, defaultPath, customDestination]);
 
-  // Track network connectivity for offline-aware login UI
+  // Track network connectivity
   useEffect(() => {
     const goOnline = () => setIsOnline(true);
     const goOffline = () => setIsOnline(false);
@@ -102,10 +121,25 @@ const Login = () => {
     signInWithGoogle();
   };
 
-  // Fast Auto-fill for mobile testing
-  const handleQuickDemo = (demoEmail, demoPass) => {
-    setValue('email', demoEmail, { shouldValidate: true });
-    setValue('password', demoPass, { shouldValidate: true });
+  // Instant 1-Click Demo Login
+  const handleInstantDemoLogin = async (roleKey) => {
+    if (!navigator.onLine) {
+      setIsOnline(false);
+      return;
+    }
+    const acc = DEMO_ACCOUNTS[roleKey];
+    setDemoActionLoading(roleKey);
+    setValue('email', acc.email, { shouldValidate: true });
+    setValue('password', acc.password, { shouldValidate: true });
+    setCustomDestination(acc.redirect);
+
+    try {
+      await signInWithEmailAndPassword(acc.email, acc.password);
+    } catch (err) {
+      console.error('Demo login error:', err);
+    } finally {
+      setDemoActionLoading(null);
+    }
   };
 
   return (
@@ -117,11 +151,11 @@ const Login = () => {
           <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl text-white shadow-lg shadow-teal-500/20" style={{ background: '#0D9488' }}>
             <Stethoscope className="h-6 w-6" />
           </div>
-          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
+          <h2 className="text-2xl font-bold text-slate-900 tracking-tight" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
             Welcome Back to <span style={{ color: '#0D9488' }}>MediCare Pro</span>
           </h2>
           <p className="text-xs text-slate-500 max-w-xs mx-auto">
-            Fast, secure medical portal sign in for appointments & health records
+            Doctor Chamber System & Patient Appointment Portal
           </p>
         </div>
 
@@ -129,7 +163,7 @@ const Login = () => {
           <CardHeader className="pb-2 text-center">
             <CardTitle className="text-lg font-bold text-slate-900">Account Login</CardTitle>
             <CardDescription className="text-xs text-slate-500">
-              Enter your registered credentials or continue with Google
+              Select a 1-click demo account or sign in with your credentials
             </CardDescription>
           </CardHeader>
 
@@ -145,19 +179,17 @@ const Login = () => {
                     Sign-in requires an internet connection to verify your credentials securely.
                     Please connect to Wi-Fi or mobile data and try again.
                   </p>
-                  <p className="text-[10px] text-slate-400 mt-1">
-                    💡 <strong>Tip:</strong> Once logged in, your session persists offline — you won't need to sign in again.
-                  </p>
                 </div>
               </div>
             )}
 
-            {/* Display Friendly Error Alert */}
+            {/* Friendly Error Alert */}
             {errorInfo && (
-              <div className={`p-3.5 rounded-2xl border text-xs flex items-start gap-2.5 transition-all ${errorInfo.isDomainError
+              <div className={`p-3.5 rounded-2xl border text-xs flex items-start gap-2.5 transition-all ${
+                errorInfo.isDomainError
                   ? 'bg-amber-50 border-amber-200 text-amber-900'
                   : 'bg-red-50 border-red-200 text-red-700'
-                }`}>
+              }`}>
                 <AlertTriangle className={`h-4 w-4 shrink-0 mt-0.5 ${errorInfo.isDomainError ? 'text-amber-600' : 'text-red-500'}`} />
                 <div className="flex-1 space-y-1">
                   <p className="font-semibold leading-relaxed">{errorInfo.text}</p>
@@ -174,6 +206,60 @@ const Login = () => {
               </div>
             )}
 
+            {/* ═══════════════════════════════════════════════════════════════════ */}
+            {/* CLEAN 1-CLICK DEMO LOGIN BUTTONS                                    */}
+            {/* ═══════════════════════════════════════════════════════════════════ */}
+            <div className="space-y-2">
+              <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider text-center">
+                Demo Accounts
+              </p>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {/* Admin Demo Login */}
+                <Button
+                  type="button"
+                  onClick={() => handleInstantDemoLogin('admin')}
+                  disabled={loading || gLoading || demoActionLoading || !isOnline}
+                  className="h-11 font-bold text-xs rounded-xl bg-amber-500 hover:bg-amber-600 text-white shadow-sm transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+                >
+                  {demoActionLoading === 'admin' ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" /> Admin Login...
+                    </>
+                  ) : (
+                    <>
+                      <ShieldCheck className="h-4 w-4" /> Admin Demo Login
+                    </>
+                  )}
+                </Button>
+
+                {/* Patient Demo Login */}
+                <Button
+                  type="button"
+                  onClick={() => handleInstantDemoLogin('patient')}
+                  disabled={loading || gLoading || demoActionLoading || !isOnline}
+                  className="h-11 font-bold text-xs rounded-xl text-white shadow-sm transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+                  style={{ background: '#0D9488' }}
+                >
+                  {demoActionLoading === 'patient' ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" /> Patient Login...
+                    </>
+                  ) : (
+                    <>
+                      <HeartPulse className="h-4 w-4" /> Patient Demo Login
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+
+            <div className="relative my-4">
+              <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-slate-200" /></div>
+              <div className="relative flex justify-center text-xs uppercase"><span className="bg-white px-2 text-slate-400 font-semibold">Or with credentials</span></div>
+            </div>
+
+            {/* Standard Manual Login Form */}
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
 
               {/* Email Input */}
@@ -237,11 +323,11 @@ const Login = () => {
               {/* Submit Button with Inline Loading */}
               <Button
                 type="submit"
-                disabled={loading || gLoading || !isOnline}
+                disabled={loading || gLoading || demoActionLoading || !isOnline}
                 className="w-full font-bold h-11 text-sm rounded-xl text-white transition-all shadow-md active:scale-[0.99] disabled:opacity-60"
                 style={{ background: '#0D9488' }}
               >
-                {loading ? (
+                {loading && !demoActionLoading ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" /> Signing In...
                   </>
@@ -271,11 +357,11 @@ const Login = () => {
               <div className="relative flex justify-center text-xs uppercase"><span className="bg-white px-2 text-slate-400 font-semibold">Or continue with</span></div>
             </div>
 
-            {/* Google Sign In Button with Inline Loading */}
+            {/* Google Sign In Button */}
             <Button
               type="button"
               onClick={handleGoogleSignIn}
-              disabled={loading || gLoading || !isOnline}
+              disabled={loading || gLoading || demoActionLoading || !isOnline}
               variant="outline"
               className="w-full h-11 font-semibold text-slate-700 hover:bg-slate-50 rounded-xl border-slate-200 active:scale-[0.99] transition-all"
             >
@@ -295,19 +381,6 @@ const Login = () => {
                 </>
               )}
             </Button>
-
-            {/* Quick Demo Fill & Domain Help Launcher */}
-            <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
-              <button
-                type="button"
-                onClick={() => handleQuickDemo('patient@gmail.com', '123456')}
-                className="font-medium text-slate-600 hover:text-teal-600 flex items-center gap-1 py-1"
-              >
-                <Sparkles className="h-3 w-3 text-amber-500" /> Auto-fill Demo Account
-              </button>
-
-
-            </div>
 
           </CardContent>
         </Card>

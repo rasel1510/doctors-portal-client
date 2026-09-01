@@ -30,8 +30,10 @@ const UserRow = ({ user, index, refetch }) => {
       });
   };
 
+  const isProtectedAdmin = email === 'rasel4897981@gmail.com' || email === 'demo.admin@medicare.com';
+
   const removeUser = () => {
-    if (email === 'rasel4897981@gmail.com') {
+    if (isProtectedAdmin) {
       toast.error('Cannot remove primary admin account.');
       return;
     }
@@ -87,7 +89,7 @@ const UserRow = ({ user, index, refetch }) => {
           size="sm"
           variant="ghost"
           onClick={removeUser}
-          disabled={email === 'rasel4897981@gmail.com'}
+          disabled={isProtectedAdmin}
           className="h-8 text-xs text-red-500 hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
         >
           <UserX className="h-3.5 w-3.5 mr-1" /> Remove
