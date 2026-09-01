@@ -93,31 +93,13 @@ const PWAInstallPrompt = ({ triggerOnHome = false }) => {
                 fill="white" fillOpacity="0.2" stroke="none" />
             </svg>
           </div>
-          <h2 className="text-xl font-extrabold tracking-tight leading-tight mb-2">
+          <h2 className="text-xl font-extrabold tracking-tight leading-tight">
             Install MediCare Pro
           </h2>
-          <p className="text-sm text-white/80 leading-relaxed">
-            Add to your home screen for fast, offline-ready access to appointments, doctors & health records.
-          </p>
         </div>
 
         {/* Body */}
         <div className="bg-white px-6 pb-6 pt-5 space-y-4">
-
-          {/* Feature list */}
-          <ul className="grid grid-cols-1 gap-2">
-            {[
-              { icon: '⚡', label: 'Lightning-fast & works offline' },
-              { icon: '📅', label: 'Book specialist appointments instantly' },
-              { icon: '🧾', label: 'View invoices & medical history' },
-              { icon: '🔔', label: 'Health appointment reminders' },
-            ].map(({ icon, label }) => (
-              <li key={label} className="flex items-center gap-3 text-sm text-slate-700">
-                <span className="text-lg leading-none">{icon}</span>
-                <span className="font-medium">{label}</span>
-              </li>
-            ))}
-          </ul>
 
           {/* iOS instruction */}
           {isIOS && (
