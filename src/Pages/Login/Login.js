@@ -8,7 +8,7 @@ import {
   LogIn, Mail, Lock, Eye, EyeOff, Stethoscope, HelpCircle,
   Loader2, AlertTriangle, WifiOff, ShieldCheck, HeartPulse
 } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -154,17 +154,11 @@ const Login = () => {
           <h2 className="text-2xl font-bold text-slate-900 tracking-tight" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
             Welcome Back to <span style={{ color: '#0D9488' }}>MediCare Pro</span>
           </h2>
-          <p className="text-xs text-slate-500 max-w-xs mx-auto">
-            Doctor Chamber System & Patient Appointment Portal
-          </p>
         </div>
 
         <Card className="border-slate-200/80 shadow-xl bg-white rounded-3xl p-1 sm:p-2">
           <CardHeader className="pb-2 text-center">
             <CardTitle className="text-lg font-bold text-slate-900">Account Login</CardTitle>
-            <CardDescription className="text-xs text-slate-500">
-              Select a 1-click demo account or sign in with your credentials
-            </CardDescription>
           </CardHeader>
 
           <CardContent className="space-y-4">
@@ -210,10 +204,6 @@ const Login = () => {
             {/* CLEAN 1-CLICK DEMO LOGIN BUTTONS                                    */}
             {/* ═══════════════════════════════════════════════════════════════════ */}
             <div className="space-y-2">
-              <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider text-center">
-                Demo Accounts
-              </p>
-              
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 {/* Admin Demo Login */}
                 <Button
