@@ -22,7 +22,6 @@ import RequireAdmin from './Pages/Login/RequireAdmin';
 import RequireAuth from './Pages/Login/RequireAuth';
 import SignUp from './Pages/Login/SignUp';
 import Navbar from './Pages/Shared/Navbar';
-import PWAInstallPrompt from './components/PWAInstallPrompt';
 import OfflineBanner from './components/OfflineBanner';
 import { Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
@@ -77,7 +76,6 @@ function App() {
           </Route>
         </Routes>
       </main>
-      <PWAInstallPrompt />
       <ToastContainer position="top-right" autoClose={3000} theme="colored" />
     </div>
   );
